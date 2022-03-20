@@ -43,47 +43,54 @@ class Point3D:
         value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
-    #rotasi dengan titik tertentu 
     def rotateArb(self, x, y, z, xp, yp, zp, angle):
         """Rotasi terhadap titik tertentu"""
-        X,Y,Z = xp-x, yp-y, zp-z
-        a = X/math.sqrt(X**2+Y**2+Z**2)
-        b = Y/math.sqrt(X**2+Y**2+Z**2)
-        c = Z/math.sqrt(X**2+Y**2+Z**2)
-        d = math.sqrt(b**2+c**2)
-        rad = angle * math.pi / 180
-        cosa = math.cos(rad)
-        sina = math.sin(rad)
-        #matriks Tranlasi 
-        Tx = np.array([[1,0,0,-X],
-                        [0,1,0,-Y],
-                        [0,0,1,-Z]
-                        [0,0,0,1]])
-        Tiv = np.array([[1,0,0,X],
-                        [0,1,0,Y],
-                        [0,0,1,Z],
-                        [0,0,0,1]])
-        Rx = np.array([[1,0,0,0],
-                        [0,c/d, -b/d, 0],
-                        [0,b/d,c/d,0],
-                        [0,0,0,1]])
-        RxIv = np.array([[1,0,0,0],
-                        [0,c/d, b/d, 0],
-                        [0,-b/d,c/d,0],
-                        [0,0,0,1]])
-        Ry = np.array([[d,0,-a,0],
-                        [0,1, 0, 0],
-                        [a,0,d,0],
-                        [0,0,0,1]])
-        RyIv = np.array([[d,0,-a,0],
-                        [0,1, 0, 0],
-                        [-a,0,d,0],
-                        [0,0,0,1]])
-        Rz = np.array([[cosa,-sina,0,0],
-                        [sina,cosa, 0, 0],
-                        [0,0,1,0],
-                        [0,0,0,1]])
-        value = np.dot(Tiv,RxIv, RyIv, Rz, Ry, Rx,Tx, [self.x, self.y, self.z, 1])
+        value = np.array([self.x, self.y, self.z, 1])
+        if x != 0 or y != 0 or z != 0 or xp != 0 or yp != 0 or zp != 0 :
+            X,Y,Z = xp-x, yp-y, zp-z
+            a = X/math.sqrt(X**2+Y**2+Z**2)
+            b = Y/math.sqrt(X**2+Y**2+Z**2)
+            c = Z/math.sqrt(X**2+Y**2+Z**2)
+            d = math.sqrt(b**2+c**2)
+            rad = angle * math.pi / 180
+            cosa = math.cos(rad)
+            sina = math.sin(rad)
+            #matriks Tranlasi 
+            Tx = np.array([ [1, 0, 0, -X],
+                            [0, 1, 0, -Y],
+                            [0, 0, 1, -Z],
+                            [0, 0, 0, 1]])
+            Tiv = np.array([[1, 0, 0, X],
+                            [0, 1, 0, Y],
+                            [0, 0, 1, Z],
+                            [0, 0, 0, 1]])
+            Rx = np.array([ [1, 0, 0, 0],
+                            [0, c/d, -b/d, 0],
+                            [0, b/d, c/d, 0],
+                            [0, 0, 0, 1]])
+            RxIv = np.array([[1, 0, 0, 0],
+                            [0, c/d, b/d, 0],
+                            [0,-b/d, c/d, 0],
+                            [0, 0, 0, 1]])
+            Ry = np.array([ [d, 0, -a, 0],
+                            [0, 1, 0, 0],
+                            [a, 0, d, 0],
+                            [0, 0, 0, 1]])
+            RyIv = np.array([[d, 0, -a, 0],
+                            [0, 1, 0, 0],
+                            [-a, 0, d, 0],
+                            [0, 0, 0, 1]])
+            Rz = np.array([ [cosa,-sina, 0, 0],
+                            [sina,cosa, 0, 0],
+                            [0, 0, 1, 0],
+                            [0, 0, 0, 1]])
+            va = np.dot(Tiv, RxIv)
+            vb = np.dot(va, RyIv)
+            vc = np.dot(vb, Rz)
+            vd = np.dot(vc, Ry)
+            ve = np.dot(vd, Rx)
+            mtx = np.dot(ve, Tx)
+            value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
     def translation(self, x, y, z):
@@ -156,7 +163,8 @@ class Simulation:
         self.trX, self.trY, self.trZ = 0, 0, 0
         self.scX, self.scY, self.scZ = 1, 1, 1
         self.shX, self.shY, self.shZ = 1, 1, 1
-        self.arbX, self.arbY, self.arbZ = 0,0,0
+        self.arbX, self.arbY, self.arbZ = 0, 0, 0
+        self.arbXP, self.arbYP, self.arbZP = 0, 0, 0
         self.cond = 0
 
         self.l1 = [[],[],[],[],[],[]]
@@ -164,7 +172,7 @@ class Simulation:
         self.l3 = [[],[],[],[],[],[]]
         self.l4 = [[],[],[],[],[],[]]
 
-    def transformation(self, w, angle, mode, changeX = 0, changeY = 0, changeZ = 0):
+    def transformation(self, w, angle, mode, changeX = 0, changeY = 0, changeZ = 0, xp = 0, yp = 0, zp = 0):
         # Inisialisasi Nilai
         x, y, z = 0, 0, 0
         if mode == 'rotX' :
@@ -191,6 +199,9 @@ class Simulation:
             self.arbX = changeX
             self.arbY = changeY
             self.arbZ = changeZ
+            self.arbXP = xp
+            self.arbYP = yp
+            self.arbZP = zp
 
         # Iterasi Transformasi
         for i in range(abs(angle)):
@@ -212,7 +223,7 @@ class Simulation:
             
             for v in self.vertices:
                 # Transformasi
-                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.trX, self.trY, self.trZ).scaling(self.scX, self.scY, self.scZ).shearing(self.shX, self.shY, self.shZ)
+                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.trX, self.trY, self.trZ).scaling(self.scX, self.scY, self.scZ).shearing(self.shX, self.shY, self.shZ).rotateArb(self.arbX, self.arbY, self.arbZ, self.arbXP, self.arbYP, self.arbZP, angle)
                 # Digambarkan dalam 2D
                 p = r.project(640, 480, 200, 4)
                 # Put the point in the list of transformed vertices
@@ -243,18 +254,17 @@ class Simulation:
                 self.l3[gx].draw(w)
                 self.l4[gx].draw(w)
                 gx += 1
-            
 
     def run(self):
         w = GraphWin("Tugas TVG", 640, 480)
         w.setBackground('white')
 
-        Simulation.transformation(self, w, 1, '', 0, 0, 0)
-        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki sisi rusuk dengan panjang 2 dan pusta 0,0,0")
+        Simulation.transformation(self, w, 1, '')
+        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki sisi rusuk dengan panjang 2 dan pusat 0,0,0")
 
         lanjut = True
         while lanjut == True:
-            print("\nPilih metode transformasi yang ingin dilakukan : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing")
+            print("\nPilih metode transformasi yang ingin dilakukan : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing \n5. Rotasi Arbitrari Axis")
             methode = int(input("Pilih sesuai nomor \n"))
             if methode == 1:
                 print("Anda memilih metode translasi.")
@@ -262,15 +272,17 @@ class Simulation:
                 y = float(input("Geser y sejauh : "))
                 z = float(input("Geser z sejauh : "))
                 Simulation.transformation(self, w, 10, 'trans', x, y, z)
+
             elif methode == 2:
                 print("Anda memilih metode scaling.")
                 x = float(input("scale x sebanyak : "))
                 y = float(input("scale y sebanyak : "))
                 z = float(input("scale z sebanyak : "))
                 Simulation.transformation(self, w, 1, 'scall', x, y, z)
+
             elif methode == 3:
                 print("Anda memilih metode rotasi.")
-                print("Tentukan sumbu rotasi yang ingin dilakukan : \n1. x \n2. y \n3. z \n4. Titik tertentu")
+                print("Tentukan sumbu rotasi yang ingin dilakukan : \n1. x \n2. y \n3. z")
                 axis = input("Pilih sesuai nomor atau sumbu: ")
                 angle = int(input("Tentukan sudut putar (dalam satuan derajat): "))
                 if axis == '1' or axis == 'x':
@@ -279,16 +291,7 @@ class Simulation:
                     Simulation.transformation(self, w, angle, 'rotY')
                 elif axis == '3' or axis == 'z':
                     Simulation.transformation(self, w, angle, 'rotZ')
-                elif axis == '4' or axis == 'titik tertentu':
-                    print('masukkan koordinat pertama pusat rotasi')
-                    x = int(input("x1= "))
-                    y = int(input("y1= "))
-                    z = int(input("z1= "))
-                    print('masukkan koordinat kedua')
-                    xp = int(input('x2= '))
-                    yp = int(input('yp= '))
-                    zp = int(input('zp= '))
-                    Simulation.transformation(self, w, angle, 'arbX', 'arbY', 'arbZ')
+
             elif methode == 4:
                 print("Anda memilih metode shearing.\n")
                 print("Tentukan sumbu shear yang ingin dilakukan : \n1. xy \n2. yz \n3. xz")
@@ -306,6 +309,20 @@ class Simulation:
                     Simulation.transformation(self, w, 1, 'shear', 0, y, z)
                 elif shear == 3:
                     Simulation.transformation(self, w, 1, 'shear', x, 0, z)
+            
+            elif methode == 5:
+                print("Anda memilih metode rotasi terhadap arbitrari axis.\n")
+                print("Masukan dua koordinat untuk garis axis rotasi: ")
+                print("Masukkan koordinat titik ke-1")
+                xo=(int(input("X = ")))
+                yo=(int(input("Y = ")))
+                zo=(int(input("Z = ")))
+                print("Masukkan koordinat titik ke-2")
+                xp=(int(input("X = ")))
+                yp=(int(input("Y = ")))
+                zp=(int(input("Z = ")))
+                degree = int(input("Tentukan sudut putar (dalam satuan derajat): "))
+                Simulation.transformation(self, w, 1, 'rotArb', xo, yo, zo, xp, yp, zp)
 
             state = input("Input Transformasi lain? (y/n): ")
             if state == "y":
