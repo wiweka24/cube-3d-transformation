@@ -43,6 +43,49 @@ class Point3D:
         value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
+    #rotasi dengan titik tertentu 
+    def rotateArb(self, x, y, z, xp, yp, zp, angle):
+        """Rotasi terhadap titik tertentu"""
+        X,Y,Z = xp-x, yp-y, zp-z
+        a = X/math.sqrt(X**2+Y**2+Z**2)
+        b = Y/math.sqrt(X**2+Y**2+Z**2)
+        c = Z/math.sqrt(X**2+Y**2+Z**2)
+        d = math.sqrt(b**2+c**2)
+        rad = angle * math.pi / 180
+        cosa = math.cos(rad)
+        sina = math.sin(rad)
+        #matriks Tranlasi 
+        Tx = np.array([[1,0,0,-X],
+                        [0,1,0,-Y],
+                        [0,0,1,-Z]
+                        [0,0,0,1]])
+        Tiv = np.array([[1,0,0,X],
+                        [0,1,0,Y],
+                        [0,0,1,Z],
+                        [0,0,0,1]])
+        Rx = np.array([[1,0,0,0],
+                        [0,c/d, -b/d, 0],
+                        [0,b/d,c/d,0],
+                        [0,0,0,1]])
+        RxIv = np.array([[1,0,0,0],
+                        [0,c/d, b/d, 0],
+                        [0,-b/d,c/d,0],
+                        [0,0,0,1]])
+        Ry = np.array([[d,0,-a,0],
+                        [0,1, 0, 0],
+                        [a,0,d,0],
+                        [0,0,0,1]])
+        RyIv = np.array([[d,0,-a,0],
+                        [0,1, 0, 0],
+                        [-a,0,d,0],
+                        [0,0,0,1]])
+        Rz = np.array([[cosa,-sina,0,0],
+                        [sina,cosa, 0, 0],
+                        [0,0,1,0],
+                        [0,0,0,1]])
+        value = np.dot(Tiv,RxIv, RyIv, Rz, Ry, Rx,Tx, [self.x, self.y, self.z, 1])
+        return Point3D(value[0], value[1], value[2])
+
     def translation(self, x, y, z):
         """ Translasi sejauh x y dan z """
         mtx = np.array([[1, 0, 0, x],
@@ -113,6 +156,7 @@ class Simulation:
         self.trX, self.trY, self.trZ = 0, 0, 0
         self.scX, self.scY, self.scZ = 1, 1, 1
         self.shX, self.shY, self.shZ = 1, 1, 1
+        self.arbX, self.arbY, self.arbZ = 0,0,0
         self.cond = 0
 
         self.l1 = [[],[],[],[],[],[]]
@@ -143,6 +187,10 @@ class Simulation:
             self.shX = changeX
             self.shY = changeY
             self.shZ = changeZ
+        elif mode == 'rotArb':
+            self.arbX = changeX
+            self.arbY = changeY
+            self.arbZ = changeZ
 
         # Iterasi Transformasi
         for i in range(abs(angle)):
@@ -222,7 +270,7 @@ class Simulation:
                 Simulation.transformation(self, w, 1, 'scall', x, y, z)
             elif methode == 3:
                 print("Anda memilih metode rotasi.")
-                print("Tentukan sumbu rotasi yang ingin dilakukan : \n1. x \n2. y \n3. z")
+                print("Tentukan sumbu rotasi yang ingin dilakukan : \n1. x \n2. y \n3. z \n4. Titik tertentu")
                 axis = input("Pilih sesuai nomor atau sumbu: ")
                 angle = int(input("Tentukan sudut putar (dalam satuan derajat): "))
                 if axis == '1' or axis == 'x':
@@ -231,6 +279,16 @@ class Simulation:
                     Simulation.transformation(self, w, angle, 'rotY')
                 elif axis == '3' or axis == 'z':
                     Simulation.transformation(self, w, angle, 'rotZ')
+                elif axis == '4' or axis == 'titik tertentu':
+                    print('masukkan koordinat pertama pusat rotasi')
+                    x = int(input("x1= "))
+                    y = int(input("y1= "))
+                    z = int(input("z1= "))
+                    print('masukkan koordinat kedua')
+                    xp = int(input('x2= '))
+                    yp = int(input('yp= '))
+                    zp = int(input('zp= '))
+                    Simulation.transformation(self, w, angle, 'arbX', 'arbY', 'arbZ')
             elif methode == 4:
                 print("Anda memilih metode shearing.\n")
                 print("Tentukan sumbu shear yang ingin dilakukan : \n1. xy \n2. yz \n3. xz")
