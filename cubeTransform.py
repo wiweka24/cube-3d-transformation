@@ -52,12 +52,33 @@ class Point3D:
         value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
-    def scalling(self, x, y, z):
+    def scaling(self, x, y, z):
         """ Translasi sejauh x y dan z """
         mtx = np.array([[x, 0, 0, 0],
                         [0, y, 0, 0],
                         [0, 0, z, 0],
                         [0, 0, 0, 1]])
+        value = np.dot(mtx, [self.x, self.y, self.z, 1])
+        return Point3D(value[0], value[1], value[2])
+
+    def shearing(self, x, y, z):
+        """ Shearing sejauh xy yz atau zx """
+        # get the shearing matrices
+        if(x == 0):
+            mtx = np.array([[1, 0, 0, 0],
+                            [y, 1, 0, 0],
+                            [z, 0, 1, 0],
+                            [0, 0, 0, 1]])
+        elif(y == 0):
+            mtx = np.array([[1, x, 0, 0],
+                            [0, 1, 0, 0],
+                            [0, z, 1, 0],
+                            [0, 0, 0, 1]])
+        elif(z == 0):
+            mtx = np.array([[1, 0, x, 0],
+                            [0, 1, y, 0],
+                            [0, 0, 1, 0],
+                            [0, 0, 0, 1]])
         value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
  
@@ -101,19 +122,23 @@ class Simulation:
         elif mode == 'rotZ':
             z = 1
         elif mode == 'scall':
-            self.scX += changeX
-            self.scY += changeY
-            self.scZ += changeZ
-        elif mode == 'trans':
-            self.chX += changeX/angle
-            self.chY += changeY/angle
-            self.chZ += changeZ/angle
-        else :
-            x, y, z = 0, 0, 0
+            self.scX *= changeX
+            self.scY *= changeY
+            self.scZ *= changeZ
 
         # Iterasi Transformasi
         for i in range(angle):
             sleep(0.01)
+
+            # Animasi
+            if mode == 'rotX' or mode == 'rotY' or mode == 'rotZ':
+                self.angleX += x
+                self.angleY += y
+                self.angleZ += z
+            elif mode == 'trans': 
+                self.chX += changeX/angle
+                self.chY += changeY/angle
+                self.chZ += changeZ/angle
 
             # Will hold transformed vertices.
             t = []
@@ -121,13 +146,8 @@ class Simulation:
             
             for v in self.vertices:
                 # Transformasi
-                if mode == 'trans':
-                    r = v.translation(self.chX, self.chY, self.chZ)
-                elif mode == 'scall':
-                    r = v.scalling(self.scX, self.scY, self.scZ)
-                else :
-                    r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ)
-                
+                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.chX, self.chY, self.chZ).scaling(self.scX, self.scY, self.scZ)
+                # Digambarkan dalam 2D
                 p = r.project(640, 480, 200, 4)
                 # Put the point in the list of transformed vertices
                 t.append(p)
@@ -158,14 +178,6 @@ class Simulation:
                 self.l4[gx].draw(w)
                 gx += 1
             
-            # Animasi
-            self.angleX += x
-            self.angleY += y
-            self.angleZ += z
-            self.chX += changeX/angle
-            self.chY += changeY/angle
-            self.chZ += changeZ/angle
-            
 
     def run(self):
         w = GraphWin("Tugas TVG", 640, 480)
@@ -185,7 +197,7 @@ class Simulation:
                 z = float(input("Geser z sejauh : "))
                 Simulation.transformation(self, w, 10, 'trans', x, y, z)
             elif methode == 2:
-                print("Anda memilih metode scalling.")
+                print("Anda memilih metode scaling.")
                 x = float(input("scale x sebanyak : "))
                 y = float(input("scale y sebanyak : "))
                 z = float(input("scale z sebanyak : "))
