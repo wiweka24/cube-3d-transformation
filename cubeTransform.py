@@ -64,6 +64,7 @@ class Point3D:
     def shearing(self, x, y, z):
         """ Shearing sejauh xy yz atau zx """
         # get the shearing matrices
+        mtx = [[0]*4]*4
         if(x == 0):
             mtx = np.array([[1, 0, 0, 0],
                             [y, 1, 0, 0],
@@ -77,6 +78,11 @@ class Point3D:
         elif(z == 0):
             mtx = np.array([[1, 0, x, 0],
                             [0, 1, y, 0],
+                            [0, 0, 1, 0],
+                            [0, 0, 0, 1]])
+        else:
+            mtx = np.array([[1, 0, 0, 0],
+                            [0, 1, 0, 0],
                             [0, 0, 1, 0],
                             [0, 0, 0, 1]])
         value = np.dot(mtx, [self.x, self.y, self.z, 1])
@@ -104,7 +110,9 @@ class Simulation:
 
         self.faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
         self.angleX, self.angleY, self.angleZ = 0, 0, 0
-        self.chX, self.chY, self.chZ, self.scX, self.scY, self.scZ = 0, 0, 0, 1, 1, 1
+        self.trX, self.trY, self.trZ = 0, 0, 0
+        self.scX, self.scY, self.scZ = 1, 1, 1
+        self.shX, self.shY, self.shZ = 1, 1, 1
         self.cond = 0
 
         self.l1 = [[],[],[],[],[],[]]
@@ -117,17 +125,27 @@ class Simulation:
         x, y, z = 0, 0, 0
         if mode == 'rotX' :
             x = 1
+            if angle < 0:
+                x = -1 
         elif mode == 'rotY' :
             y = 1
+            if angle < 0:
+                y = -1 
         elif mode == 'rotZ':
             z = 1
+            if angle < 0:
+                z = -1 
         elif mode == 'scall':
             self.scX *= changeX
             self.scY *= changeY
             self.scZ *= changeZ
+        elif mode == 'shear':
+            self.shX = changeX
+            self.shY = changeY
+            self.shZ = changeZ
 
         # Iterasi Transformasi
-        for i in range(angle):
+        for i in range(abs(angle)):
             sleep(0.01)
 
             # Animasi
@@ -136,9 +154,9 @@ class Simulation:
                 self.angleY += y
                 self.angleZ += z
             elif mode == 'trans': 
-                self.chX += changeX/angle
-                self.chY += changeY/angle
-                self.chZ += changeZ/angle
+                self.trX += changeX/angle
+                self.trY += changeY/angle
+                self.trZ += changeZ/angle
 
             # Will hold transformed vertices.
             t = []
@@ -146,7 +164,7 @@ class Simulation:
             
             for v in self.vertices:
                 # Transformasi
-                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.chX, self.chY, self.chZ).scaling(self.scX, self.scY, self.scZ)
+                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.trX, self.trY, self.trZ).scaling(self.scX, self.scY, self.scZ).shearing(self.shX, self.shY, self.shZ)
                 # Digambarkan dalam 2D
                 p = r.project(640, 480, 200, 4)
                 # Put the point in the list of transformed vertices
@@ -188,7 +206,7 @@ class Simulation:
 
         lanjut = True
         while lanjut == True:
-            print("\nPilih metode transformasi yang ingin dilakukan : \n1. Translasi \n2. Scaling \n3. Rotasi")
+            print("\nPilih metode transformasi yang ingin dilakukan : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing")
             methode = int(input("Pilih sesuai nomor \n"))
             if methode == 1:
                 print("Anda memilih metode translasi.")
@@ -213,7 +231,24 @@ class Simulation:
                     Simulation.transformation(self, w, angle, 'rotY')
                 elif axis == '3' or axis == 'z':
                     Simulation.transformation(self, w, angle, 'rotZ')
-            
+            elif methode == 4:
+                print("Anda memilih metode shearing.\n")
+                print("Tentukan sumbu shear yang ingin dilakukan : \n1. xy \n2. yz \n3. xz")
+                shear = int(input("Pilih sesuai nomor \n"))
+                if shear == 1 or shear == 3:
+                    x = int(input("Shear x sebesar : "))
+                if shear == 1 or shear == 2:
+                    y = int(input("Shear y sebesar : "))
+                if shear == 2 or shear == 3:
+                    z = int(input("Shear z sebesar : "))
+
+                if shear == 1:
+                    Simulation.transformation(self, w, 1, 'shear', x, y, 0)
+                elif shear == 2:
+                    Simulation.transformation(self, w, 1, 'shear', 0, y, z)
+                elif shear == 3:
+                    Simulation.transformation(self, w, 1, 'shear', x, 0, z)
+
             state = input("Input Transformasi lain? (y/n): ")
             if state == "y":
                 lanjut = True
