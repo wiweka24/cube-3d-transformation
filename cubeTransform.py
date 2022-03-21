@@ -141,6 +141,7 @@ class Point3D:
 
 class Simulation:
     def __init__(self):
+        # Titik Balok by default
         self.vertices = [
             Point3D(-2,1,-1),
             Point3D(2,1,-1),
@@ -262,7 +263,8 @@ class Simulation:
         w.setBackground('white')
 
         Simulation.transformation(self, w, 1, '')
-        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki plt 4x2x2 dan pusat 0,0,0")
+        print("\nBerikut merupakan program simulasi Transformasi 3D sebuah Balok\nBy default balok memiliki plt 4x2x2 dan pusat 0,0,0")
+        print("Berikut merupakan titik balok yang dipakai:\nA(-2,1,-1)\nB(2,1,-1)\nC(2,-1,-1)\nD(-2,-1,-1)\nE(-2,1,1)\nF(2,1,1)\nG(2,-1,1)\nH(-2,-1,1)\n")    
 
         # Membuat menu pilihan dari transformasi yang tersedia
         lanjut = True
