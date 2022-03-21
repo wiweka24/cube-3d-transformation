@@ -271,8 +271,12 @@ class Simulation:
 
         # Gambaran titik Awal
         Simulation.transformation(self, w, 1, '')
-        print("\nBerikut merupakan program simulasi Transformasi 3D sebuah Balok\nBy default balok memiliki plt 4x2x2 dan pusat 0,0,0")
-        print("Berikut merupakan titik balok yang dipakai:\nA(-2,1,-1)\nB(2,1,-1)\nC(2,-1,-1)\nD(-2,-1,-1)\nE(-2,1,1)\nF(2,1,1)\nG(2,-1,1)\nH(-2,-1,1)\n")    
+        print("\n=========================================================")
+        print("      PROGRAM SIMULASI TRANFORMASI 3D SEBUAH BALOK")
+        print("=========================================================")
+        print("Ukuran default balok : plt 4x2x2 dan pusat 0,0,0")
+        print("Berikut merupakan titik balok yang dipakai:\n  A(-2,1,-1)\n  B(2,1,-1)\n  C(2,-1,-1)\n  D(-2,-1,-1)\n  E(-2,1,1)\n  F(2,1,1)\n  G(2,-1,1)\n  H(-2,-1,1)")    
+        print("=========================================================")
 
         manual= input("Apakah anda ingin mengganti titik balok secara manual? (y/n) : ")
         if manual == 'y' :
@@ -298,7 +302,7 @@ class Simulation:
         lanjut = True
         while lanjut == True:
             print("\nBerikut merupakan pilihan menu transformasi 3D : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing \n5. Rotasi Arbitrari Axis")
-            methode = int(input("Pilih sesuai nomor \n"))
+            methode = int(input("Pilih sesuai nomor : "))
             if methode == 1:
                 print("Anda memilih metode translasi.")
                 x = float(input("Geser x sejauh : "))
@@ -316,7 +320,7 @@ class Simulation:
             elif methode == 3:
                 print("Anda memilih metode rotasi.")
                 print("Tentukan sumbu rotasi yang ingin dilakukan : \n1. x \n2. y \n3. z")
-                axis = input("Pilih sesuai nomor atau sumbu: ")
+                axis = input("Pilih sesuai nomor atau sumbu : ")
                 angle = int(input("Tentukan sudut putar (dalam satuan derajat): "))
                 if axis == '1' or axis == 'x':
                     Simulation.transformation(self, w, angle, 'rotX')
@@ -345,7 +349,7 @@ class Simulation:
             
             elif methode == 5:
                 print("Anda memilih metode rotasi terhadap arbitrari axis.\n")
-                print("Masukan dua koordinat untuk garis axis rotasi: ")
+                print("Masukan dua koordinat untuk garis axis rotasi : ")
                 print("Masukkan koordinat titik ke-1")
                 xo=(int(input("X = ")))
                 yo=(int(input("Y = ")))
@@ -354,10 +358,10 @@ class Simulation:
                 xp=(int(input("X = ")))
                 yp=(int(input("Y = ")))
                 zp=(int(input("Z = ")))
-                angle = int(input("Tentukan sudut putar (dalam satuan derajat): "))
+                angle = int(input("Tentukan sudut putar (dalam satuan derajat) : "))
                 Simulation.transformation(self, w, angle, 'rotArb', xo, yo, zo, xp, yp, zp)
 
-            state = input("Input Transformasi lain? (y/n): ")
+            state = input("Input Transformasi lain? (y/n) : ")
             if state == "y":
                 lanjut = True
             elif state == "n":
