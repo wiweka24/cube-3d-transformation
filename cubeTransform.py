@@ -279,20 +279,20 @@ class Simulation:
 
         manual= input("Apakah anda ingin mengganti titik balok secara manual? (y/n) : ")
         if manual == 'y' :
-            for i in range(8):
+            for i in range(2):
                 print("Masukkan koordinat titik ke-", i+1)
                 x_input.append(float(input("x = ")))
                 y_input.append(float(input("y = ")))
                 z_input.append(float(input("z = ")))
             self.vertices = [
                 Point3D(x_input[0],y_input[0],z_input[0]),
+                Point3D(x_input[0],y_input[1],z_input[0]),
+                Point3D(x_input[1],y_input[1],z_input[0]),
+                Point3D(x_input[1],y_input[0],z_input[0]),
+                Point3D(x_input[0],y_input[0],z_input[1]),
+                Point3D(x_input[0],y_input[1],z_input[1]),
                 Point3D(x_input[1],y_input[1],z_input[1]),
-                Point3D(x_input[2],y_input[2],z_input[2]),
-                Point3D(x_input[3],y_input[3],z_input[3]),
-                Point3D(x_input[4],y_input[4],z_input[4]),
-                Point3D(x_input[5],y_input[5],z_input[5]),
-                Point3D(x_input[6],y_input[6],z_input[6]),
-                Point3D(x_input[7],y_input[7],z_input[7])
+                Point3D(x_input[1],y_input[0],z_input[1])
             ]
             # Jika input titik baru
             Simulation.transformation(self, w, 1, '')
