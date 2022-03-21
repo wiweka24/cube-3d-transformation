@@ -260,7 +260,7 @@ class Simulation:
                 gx += 1
 
     def run(self):
-        w = GraphWin("Tugas TVG", 640, 480)
+        w = GraphWin("Tugas TVG Kelompok 8", 640, 480)
         w.setBackground('white')
 
         i = 0
