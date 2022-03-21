@@ -164,6 +164,7 @@ class Simulation:
         self.shX, self.shY, self.shZ = 1, 1, 1
         self.arbX, self.arbY, self.arbZ = 0, 0, 0
         self.arbXP, self.arbYP, self.arbZP = 0, 0, 0
+        self.angleArb = 0
         self.cond = 0
 
         self.l1 = [[],[],[],[],[],[]]
@@ -202,6 +203,11 @@ class Simulation:
             self.arbYP = yp
             self.arbZP = zp
 
+            arb = 1
+            if angle < 0:
+                arb = -1 
+
+
         # Iterasi Transformasi
         for i in range(abs(angle)):
             sleep(0.01)
@@ -215,6 +221,8 @@ class Simulation:
                 self.trX += changeX/angle
                 self.trY += changeY/angle
                 self.trZ += changeZ/angle
+            elif mode == 'rotArb':
+                self.angleArb += arb
 
             # Will hold transformed vertices.
             t = []
@@ -222,7 +230,7 @@ class Simulation:
             
             for v in self.vertices:
                 # Transformasi
-                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.trX, self.trY, self.trZ).scaling(self.scX, self.scY, self.scZ).shearing(self.shX, self.shY, self.shZ).rotateArb(self.arbX, self.arbY, self.arbZ, self.arbXP, self.arbYP, self.arbZP, angle)
+                r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.trX, self.trY, self.trZ).scaling(self.scX, self.scY, self.scZ).shearing(self.shX, self.shY, self.shZ).rotateArb(self.arbX, self.arbY, self.arbZ, self.arbXP, self.arbYP, self.arbZP, self.angleArb)
                 # Digambarkan dalam 2D
                 p = r.project(640, 480, 500, 10)
                 # Put the point in the list of transformed vertices
@@ -321,8 +329,8 @@ class Simulation:
                 xp=(int(input("X = ")))
                 yp=(int(input("Y = ")))
                 zp=(int(input("Z = ")))
-                degree = int(input("Tentukan sudut putar (dalam satuan derajat): "))
-                Simulation.transformation(self, w, 1, 'rotArb', xo, yo, zo, xp, yp, zp)
+                angle = int(input("Tentukan sudut putar (dalam satuan derajat): "))
+                Simulation.transformation(self, w, angle, 'rotArb', xo, yo, zo, xp, yp, zp)
 
             state = input("Input Transformasi lain? (y/n): ")
             if state == "y":
