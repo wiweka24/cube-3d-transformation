@@ -84,12 +84,7 @@ class Point3D:
                             [sina,cosa, 0, 0],
                             [0, 0, 1, 0],
                             [0, 0, 0, 1]])
-            va = np.dot(Tiv, RxIv)
-            vb = np.dot(va, RyIv)
-            vc = np.dot(vb, Rz)
-            vd = np.dot(vc, Ry)
-            ve = np.dot(vd, Rx)
-            mtx = np.dot(ve, Tx)
+            mtx = np.dot(Tx,np.dot(Rx,np.dot(Ry,np.dot(Rz,np.dot(RyIv, np.dot(RxIv,Tiv))))))
             value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
