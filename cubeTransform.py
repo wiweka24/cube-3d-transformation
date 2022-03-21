@@ -55,6 +55,7 @@ class Point3D:
             rad = angle * math.pi / 180
             cosa = math.cos(rad)
             sina = math.sin(rad)
+            print(f"a = {a}\n b = {b}\n c = {c}\n d = {d} \n cosa = {cosa}\n sina = {sina}")
             #matriks Tranlasi 
             Tx = np.array([ [1, 0, 0, -X],
                             [0, 1, 0, -Y],
@@ -65,18 +66,18 @@ class Point3D:
                             [0, 0, 1, Z],
                             [0, 0, 0, 1]])
             Rx = np.array([ [1, 0, 0, 0],
-                            [0, c/d, -b/d, 0],
+                            [0, c/d, -(b/d), 0],
                             [0, b/d, c/d, 0],
                             [0, 0, 0, 1]])
             RxIv = np.array([[1, 0, 0, 0],
                             [0, c/d, b/d, 0],
-                            [0,-b/d, c/d, 0],
+                            [0,-(b/d), c/d, 0],
                             [0, 0, 0, 1]])
             Ry = np.array([ [d, 0, -a, 0],
                             [0, 1, 0, 0],
                             [a, 0, d, 0],
                             [0, 0, 0, 1]])
-            RyIv = np.array([[d, 0, -a, 0],
+            RyIv = np.array([[d, 0, a, 0],
                             [0, 1, 0, 0],
                             [-a, 0, d, 0],
                             [0, 0, 0, 1]])
@@ -84,9 +85,9 @@ class Point3D:
                             [sina,cosa, 0, 0],
                             [0, 0, 1, 0],
                             [0, 0, 0, 1]])
-            mtx = np.dot(Tx,np.dot(Rx,np.dot(Ry,np.dot(Rz,np.dot(RyIv, np.dot(RxIv,Tiv))))))
-            # mtx = np.dot(Tiv,np.dot(RxIv,np.dot(RyIv,np.dot(Rz,np.dot(Ry, np.dot(Rx,Tx))))))
-            # print(mtx)
+            
+            mtx = Tiv @ RxIv @ RyIv @ Rz @ Ry @ Rx @ Tx
+            # print(mtx.round(2))
             value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
@@ -155,7 +156,6 @@ class Simulation:
             ]
 
         self.faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
-
         self.angleX, self.angleY, self.angleZ = 0, 0, 0
         self.trX, self.trY, self.trZ = 0, 0, 0
         self.scX, self.scY, self.scZ = 1, 1, 1
