@@ -289,7 +289,7 @@ class Simulation:
         manual= input("Apakah anda ingin mengganti titik balok secara manual? (y/n) : ")
         if manual == 'y' :
             for i in range(2):
-                print("Masukkan koordinat titik ke-", i+1)
+                print("Masukkan koordinat titik ujung balok ke-", i+1)
                 x_input.append(float(input("x = ")))
                 y_input.append(float(input("y = ")))
                 z_input.append(float(input("z = ")))
