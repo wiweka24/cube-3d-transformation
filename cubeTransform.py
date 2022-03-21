@@ -85,6 +85,8 @@ class Point3D:
                             [0, 0, 1, 0],
                             [0, 0, 0, 1]])
             mtx = np.dot(Tx,np.dot(Rx,np.dot(Ry,np.dot(Rz,np.dot(RyIv, np.dot(RxIv,Tiv))))))
+            # mtx = np.dot(Tiv,np.dot(RxIv,np.dot(RyIv,np.dot(Rz,np.dot(Ry, np.dot(Rx,Tx))))))
+            # print(mtx)
             value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
@@ -141,69 +143,7 @@ class Point3D:
 
 class Simulation:
     def __init__(self):
-        # Titik Balok by default
         self.vertices = [
-            Point3D(-2,1,-1),
-            Point3D(2,1,-1),
-            Point3D(2,-1,-1),
-            Point3D(-2,-1,-1),
-            Point3D(-2,1,1),
-            Point3D(2,1,1),
-            Point3D(2,-1,1),
-            Point3D(-2,-1,1)
-        ]
-
-        # Opsi input secara manual dari user
-        i = 0
-        x_input = []
-        y_input = []
-        z_input = []
-        manual = input("Apakah anda ingin memasukkan titik secara manual?(y/n) : ")
-        # User ingin input manual titik balok yang akan ditrasnlasi
-        if manual == 'y' :
-            for i in range(8):
-                print("Masukkan koordinat titik ke-", i+1)
-                x_input.append(int(input("x = ")))
-                y_input.append(int(input("y = ")))
-                z_input.append(int(input("z = ")))
-    
-            # x1 = input("Masukkan x1 : ")
-            # y1 = input("Masukkan y1 : ")
-            # z1 = input("Masukkan z1 : ")
-            # x2 = input("Masukkan x2 : ")
-            # y2 = input("Masukkan y2 : ")
-            # z2 = input("Masukkan z2 : ")
-            # x3 = input("Masukkan x3 : ")
-            # y3 = input("Masukkan y3 : ")
-            # z3 = input("Masukkan z3 : ")
-            # x4 = input("Masukkan x4 : ")
-            # y4 = input("Masukkan y4 : ")
-            # z4 = input("Masukkan z4 : ")
-            # x5 = input("Masukkan x5 : ")
-            # y5 = input("Masukkan y5 : ")
-            # z5 = input("Masukkan z5 : ")
-            # x6 = input("Masukkan x6 : ")
-            # y6 = input("Masukkan y6 : ")
-            # z6 = input("Masukkan z6 : ")
-            # x7 = input("Masukkan x7 : ")
-            # y7 = input("Masukkan y7 : ")
-            # z7 = input("Masukkan z7 : ")
-            # x8 = input("Masukkan x8 : ")
-            # y8 = input("Masukkan y8 : ")
-            # z8 = input("Masukkan z8 : ")
-            
-            self.vertices = [
-                Point3D(x_input[0],y_input[0],z_input[0]),
-                Point3D(x_input[1],y_input[1],z_input[1]),
-                Point3D(x_input[2],y_input[2],z_input[2]),
-                Point3D(x_input[3],y_input[3],z_input[3]),
-                Point3D(x_input[4],y_input[4],z_input[4]),
-                Point3D(x_input[5],y_input[5],z_input[5]),
-                Point3D(x_input[6],y_input[6],z_input[6]),
-                Point3D(x_input[7],y_input[7],z_input[7])
-            ]
-        else :
-            self.vertices = [
                 Point3D(-2,1,-1),
                 Point3D(2,1,-1),
                 Point3D(2,-1,-1),
@@ -215,6 +155,7 @@ class Simulation:
             ]
 
         self.faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
+
         self.angleX, self.angleY, self.angleZ = 0, 0, 0
         self.trX, self.trY, self.trZ = 0, 0, 0
         self.scX, self.scY, self.scZ = 1, 1, 1
@@ -323,11 +264,37 @@ class Simulation:
         w = GraphWin("Tugas TVG", 640, 480)
         w.setBackground('white')
 
+        i = 0
+        x_input = []
+        y_input = []
+        z_input = []
+
+        # Gambaran titik Awal
         Simulation.transformation(self, w, 1, '')
         print("\nBerikut merupakan program simulasi Transformasi 3D sebuah Balok\nBy default balok memiliki plt 4x2x2 dan pusat 0,0,0")
         print("Berikut merupakan titik balok yang dipakai:\nA(-2,1,-1)\nB(2,1,-1)\nC(2,-1,-1)\nD(-2,-1,-1)\nE(-2,1,1)\nF(2,1,1)\nG(2,-1,1)\nH(-2,-1,1)\n")    
 
-        # Membuat menu pilihan dari transformasi yang tersedia
+        manual= input("Apakah anda ingin mengganti titik balok secara manual? (y/n) : ")
+        if manual == 'y' :
+            for i in range(8):
+                print("Masukkan koordinat titik ke-", i+1)
+                x_input.append(float(input("x = ")))
+                y_input.append(float(input("y = ")))
+                z_input.append(float(input("z = ")))
+            self.vertices = [
+                Point3D(x_input[0],y_input[0],z_input[0]),
+                Point3D(x_input[1],y_input[1],z_input[1]),
+                Point3D(x_input[2],y_input[2],z_input[2]),
+                Point3D(x_input[3],y_input[3],z_input[3]),
+                Point3D(x_input[4],y_input[4],z_input[4]),
+                Point3D(x_input[5],y_input[5],z_input[5]),
+                Point3D(x_input[6],y_input[6],z_input[6]),
+                Point3D(x_input[7],y_input[7],z_input[7])
+            ]
+            # Jika input titik baru
+            Simulation.transformation(self, w, 1, '')
+
+       # Membuat menu pilihan dari transformasi yang tersedia
         lanjut = True
         while lanjut == True:
             print("\nBerikut merupakan pilihan menu transformasi 3D : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing \n5. Rotasi Arbitrari Axis")
@@ -396,6 +363,6 @@ class Simulation:
             elif state == "n":
                 lanjut = False
 
-        input('Press ENTER to exit')
+        input('Tekan ENTER untuk keluar')
 
 Simulation().run()
