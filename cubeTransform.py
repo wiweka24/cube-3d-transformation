@@ -141,16 +141,53 @@ class Point3D:
 
 class Simulation:
     def __init__(self):
-        self.vertices = [
-            Point3D(-2,1,-1),
-            Point3D(2,1,-1),
-            Point3D(2,-1,-1),
-            Point3D(-2,-1,-1),
-            Point3D(-2,1,1),
-            Point3D(2,1,1),
-            Point3D(2,-1,1),
-            Point3D(-2,-1,1)
-        ]
+        manual= input("Apakah anda ingin memasukkan titik secara manual? (y/n) : ")
+        if manual == 'y' :
+            x1 = input("Masukkan x1 : ")
+            y1 = input("Masukkan y1 : ")
+            z1 = input("Masukkan z1 : ")
+            x2 = input("Masukkan x2 : ")
+            y2 = input("Masukkan y2 : ")
+            z2 = input("Masukkan z2 : ")
+            x3 = input("Masukkan x3 : ")
+            y3 = input("Masukkan y3 : ")
+            z3 = input("Masukkan z3 : ")
+            x4 = input("Masukkan x4 : ")
+            y4 = input("Masukkan y4 : ")
+            z4 = input("Masukkan z4 : ")
+            x5 = input("Masukkan x5 : ")
+            y5 = input("Masukkan y5 : ")
+            z5 = input("Masukkan z5 : ")
+            x6 = input("Masukkan x6 : ")
+            y6 = input("Masukkan y6 : ")
+            z6 = input("Masukkan z6 : ")
+            x7 = input("Masukkan x7 : ")
+            y7 = input("Masukkan y7 : ")
+            z7 = input("Masukkan z7 : ")
+            x8 = input("Masukkan x8 : ")
+            y8 = input("Masukkan y8 : ")
+            z8 = input("Masukkan z8 : ")
+            self.vertices = [
+                Point3D(x1,y1,z1),
+                Point3D(x2,y2,z2),
+                Point3D(x3,y3,z3),
+                Point3D(x4,y4,z4),
+                Point3D(x5,y5,z5),
+                Point3D(x6,y6,z6),
+                Point3D(x7,y7,z7),
+                Point3D(x8,y8,z8)
+            ]
+        else :
+            self.vertices = [
+                Point3D(-2,1,-1),
+                Point3D(2,1,-1),
+                Point3D(2,-1,-1),
+                Point3D(-2,-1,-1),
+                Point3D(-2,1,1),
+                Point3D(2,1,1),
+                Point3D(2,-1,1),
+                Point3D(-2,-1,1)
+            ]
 
         self.faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
         self.angleX, self.angleY, self.angleZ = 0, 0, 0
