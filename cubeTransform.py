@@ -8,7 +8,7 @@ class Point3D:
         self.x, self.y, self.z = float(x), float(y), float(z)
  
     def rotateX(self, angle):
-        """ Rotasi dengan sumbu putar sumbu X """
+        # Rotasi dengan sumbu putar sumbu X 
         rad = angle * math.pi / 180
         cosa = math.cos(rad)
         sina = math.sin(rad)
@@ -20,7 +20,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
  
     def rotateY(self, angle):
-        """ Rotasi dengan sumbu putar sumbu Y """
+        # Rotasi dengan sumbu putar sumbu Y
         rad = angle * math.pi / 180
         cosa = math.cos(rad)
         sina = math.sin(rad)
@@ -32,7 +32,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
  
     def rotateZ(self, angle):
-        """ Rotasi dengan sumbu putar sumbu Z """
+        # Rotasi dengan sumbu putar sumbu Z
         rad = angle * math.pi / 180
         cosa = math.cos(rad)
         sina = math.sin(rad)
@@ -44,7 +44,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
 
     def rotateArb(self, x, y, z, xp, yp, zp, angle):
-        """Rotasi terhadap titik tertentu"""
+        # Rotasi terhadap titik tertentu
         value = np.array([self.x, self.y, self.z, 1])
         if x != 0 or y != 0 or z != 0 or xp != 0 or yp != 0 or zp != 0 :
             X,Y,Z = xp-x, yp-y, zp-z
@@ -94,7 +94,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
 
     def translation(self, x, y, z):
-        """ Translasi sejauh x y dan z """
+        # Translasi sejauh x y dan z
         mtx = np.array([[1, 0, 0, x],
                         [0, 1, 0, y],
                         [0, 0, 1, z],
@@ -103,7 +103,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
 
     def scaling(self, x, y, z):
-        """ Translasi sejauh x y dan z """
+        # Translasi sejauh x y dan z
         mtx = np.array([[x, 0, 0, 0],
                         [0, y, 0, 0],
                         [0, 0, z, 0],
@@ -112,8 +112,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
 
     def shearing(self, x, y, z):
-        """ Shearing sejauh xy yz atau zx """
-        # get the shearing matrices
+        # Shearing sejauh xy yz atau zx
         mtx = [[0]*4]*4
         if(x == 0):
             mtx = np.array([[1, 0, 0, 0],
@@ -139,7 +138,7 @@ class Point3D:
         return Point3D(value[0], value[1], value[2])
  
     def project(self, win_width, win_height, fov, viewer_distance):
-        """ Transforms this 3D point to 2D using a perspective projection. """
+        # Mengvisualisasikan titik balok 3D ke dalam bentuk berupa 2D
         factor = fov / (viewer_distance + self.z)
         x = self.x * factor + win_width / 2
         y = -self.y * factor + win_height / 2
@@ -152,10 +151,10 @@ class Simulation:
             Point3D(1,1,-1),
             Point3D(1,-1,-1),
             Point3D(-1,-1,-1),
-            Point3D(-1,1,1),
-            Point3D(1,1,1),
-            Point3D(1,-1,1),
-            Point3D(-1,-1,1)
+            Point3D(-1,1,5),
+            Point3D(1,1,5),
+            Point3D(1,-1,5),
+            Point3D(-1,-1,5)
         ]
 
         self.faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
@@ -260,8 +259,9 @@ class Simulation:
         w.setBackground('white')
 
         Simulation.transformation(self, w, 1, '')
-        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki sisi rusuk dengan panjang 2 dan pusat 0,0,0")
+        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki plt 6x2x2 dan pusat 0,0,0")
 
+        # Membuat menu pilihan dari transformasi yang tersedia
         lanjut = True
         while lanjut == True:
             print("\nPilih metode transformasi yang ingin dilakukan : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing \n5. Rotasi Arbitrari Axis")

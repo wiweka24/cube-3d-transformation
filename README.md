@@ -1,2 +1,2 @@
 # Cube-3D-Transformation
-Projek Sederhana Transformasi 3D untuk sebuah Kubus. Projek Tugas Mata Kuliah Teknik Visualisasi Grafis
+Projek ini merupakan implementasi dari Tugas Mata Kuliah Teknik Visualisasi Grafis yaitu dengan membuat Program Python Mengenai Transformasi 3D pada Balok. 
