@@ -267,7 +267,7 @@ class Simulation:
         # Membuat menu pilihan dari transformasi yang tersedia
         lanjut = True
         while lanjut == True:
-            print("\nPilih metode transformasi yang ingin dilakukan : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing \n5. Rotasi Arbitrari Axis")
+            print("\nBerikut merupakan pilihan menu transformasi 3D : \n1. Translasi \n2. Scaling \n3. Rotasi \n4. Shearing \n5. Rotasi Arbitrari Axis")
             methode = int(input("Pilih sesuai nomor \n"))
             if methode == 1:
                 print("Anda memilih metode translasi.")
