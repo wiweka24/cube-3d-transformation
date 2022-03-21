@@ -1,3 +1,10 @@
+# Daftar Anggota Kelompok 8 :
+# 1. Cicilia Widhi Astuti   - 20/456362/TK/50492
+# 2. Wiweka Yoga Sadewa     - 20/456382/TK/50512
+# 3. Elza Natali Wijaya     - 20/460542/TK/51131
+# 4. Rizky Junian Nugroho   - 20/460564/TK/51153
+# 5. Ipung Sonia Faradhisma - 20/463603/TK/51595
+
 import math
 import numpy as np
 from graphics import *
