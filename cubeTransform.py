@@ -71,14 +71,6 @@ class Point3D:
                             [0, 1, 0, Y],
                             [0, 0, 1, Z],
                             [0, 0, 0, 1]])
-            Rx = np.array([ [1, 0, 0, 0],
-                            [0, c/d, -(b/d), 0],
-                            [0, b/d, c/d, 0],
-                            [0, 0, 0, 1]])
-            RxIv = np.array([[1, 0, 0, 0],
-                            [0, c/d, b/d, 0],
-                            [0,-(b/d), c/d, 0],
-                            [0, 0, 0, 1]])
             Ry = np.array([ [d, 0, -a, 0],
                             [0, 1, 0, 0],
                             [a, 0, d, 0],
@@ -91,9 +83,19 @@ class Point3D:
                             [sina,cosa, 0, 0],
                             [0, 0, 1, 0],
                             [0, 0, 0, 1]])
+            if d == 0:
+                mtx = Tiv @ RyIv @ Rz @ Ry @ Tx
+            else:
+                Rx = np.array([ [1, 0, 0, 0],
+                                [0, c/d, -(b/d), 0],
+                                [0, b/d, c/d, 0],
+                                [0, 0, 0, 1]])
+                RxIv = np.array([[1, 0, 0, 0],
+                                [0, c/d, b/d, 0],
+                                [0,-(b/d), c/d, 0],
+                                [0, 0, 0, 1]])
+                mtx = Tiv @ RxIv @ RyIv @ Rz @ Ry @ Rx @ Tx
             
-            mtx = Tiv @ RxIv @ RyIv @ Rz @ Ry @ Rx @ Tx
-            # print(mtx.round(2))
             value = np.dot(mtx, [self.x, self.y, self.z, 1])
         return Point3D(value[0], value[1], value[2])
 
