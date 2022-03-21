@@ -55,7 +55,6 @@ class Point3D:
             rad = angle * math.pi / 180
             cosa = math.cos(rad)
             sina = math.sin(rad)
-            print(f"a = {a}\n b = {b}\n c = {c}\n d = {d} \n cosa = {cosa}\n sina = {sina}")
             #matriks Tranlasi 
             Tx = np.array([ [1, 0, 0, -X],
                             [0, 1, 0, -Y],
