@@ -147,14 +147,14 @@ class Point3D:
 class Simulation:
     def __init__(self):
         self.vertices = [
-            Point3D(-1,1,-1),
-            Point3D(1,1,-1),
-            Point3D(1,-1,-1),
-            Point3D(-1,-1,-1),
-            Point3D(-1,1,5),
-            Point3D(1,1,5),
-            Point3D(1,-1,5),
-            Point3D(-1,-1,5)
+            Point3D(-2,1,-1),
+            Point3D(2,1,-1),
+            Point3D(2,-1,-1),
+            Point3D(-2,-1,-1),
+            Point3D(-2,1,1),
+            Point3D(2,1,1),
+            Point3D(2,-1,1),
+            Point3D(-2,-1,1)
         ]
 
         self.faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
@@ -224,7 +224,7 @@ class Simulation:
                 # Transformasi
                 r = v.rotateX(self.angleX).rotateY(self.angleY).rotateZ(self.angleZ).translation(self.trX, self.trY, self.trZ).scaling(self.scX, self.scY, self.scZ).shearing(self.shX, self.shY, self.shZ).rotateArb(self.arbX, self.arbY, self.arbZ, self.arbXP, self.arbYP, self.arbZP, angle)
                 # Digambarkan dalam 2D
-                p = r.project(640, 480, 200, 4)
+                p = r.project(640, 480, 500, 10)
                 # Put the point in the list of transformed vertices
                 t.append(p)
 
@@ -259,7 +259,7 @@ class Simulation:
         w.setBackground('white')
 
         Simulation.transformation(self, w, 1, '')
-        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki plt 6x2x2 dan pusat 0,0,0")
+        print("\nBerikut merupakan program sederhana simulasi transformasi 3D sebuah balok\nSecara default balok memiliki plt 4x2x2 dan pusat 0,0,0")
 
         # Membuat menu pilihan dari transformasi yang tersedia
         lanjut = True
